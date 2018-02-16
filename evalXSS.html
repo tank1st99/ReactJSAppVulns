@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<title>XSS Example: Eval</title>
+	</head>
+	<body>
+		<div id="root"></div>
+	</body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+	<!--
+        Payload: alert(1)
+    -->
+	<script type="text/babel">
+	class App extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = {text: '', result: ''}
+		}
+		
+		handleChange(event){
+			this.setState({ text: event.target.value });
+			if (event.key === 'Enter') {
+				this.setState({ result: eval(event.target.value) });
+			}
+		}
+		
+		render() {
+			return (
+			<div>
+				<h1>Input Math Expression and press Enter:</h1>
+				<input type="text" onKeyUp={this.handleChange.bind(this)} placeholder="2+2*2"/>
+				<div><b>Result:</b>&nbsp;{this.state.result}</div>
+			</div>);
+		}
+	}
+	ReactDOM.render(
+		<App />,
+		document.getElementById('root')
+	);
+	</script>
+</html>

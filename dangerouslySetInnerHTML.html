@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<title>XSS Example: dangerouslySetInnerHTML</title>
+	</head>
+	<body>
+		<div id="root"></div>
+	</body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+	<!--
+        Payload: <img src=x onerror='alert(1)'/>
+    -->
+	<script type="text/babel">
+	class App extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = {text: ''}
+		}
+		
+		handleChange(event){
+			this.setState({ text: event.target.value });
+		}
+		
+		render() {
+			return (
+			<div>
+				<input type="text" onKeyUp={this.handleChange.bind(this)} placeholder="Hello, React!"/>
+				<h1>Your input:</h1>
+				<div dangerouslySetInnerHTML={{ "__html" : this.state.text}}/>
+			</div>);
+		}
+	}
+	ReactDOM.render(
+		<App />,
+		document.getElementById('root')
+	);
+	</script>
+</html>
